@@ -11,6 +11,8 @@ namespace Singleton
         private bool empty;
         private bool boiled;
 
+        private static readonly object _banlanceLock = new object();
+
         private static ChocolateBoiler uniqueInstance;
 
         public bool IsEmpty { get { return this.empty; } }
@@ -27,7 +29,13 @@ namespace Singleton
         {
             if(uniqueInstance == null)
             {
-                uniqueInstance = new ChocolateBoiler();
+                lock(_banlanceLock)
+                {
+                    if(uniqueInstance == null)
+                    {
+                        uniqueInstance = new ChocolateBoiler();
+                    }
+                }
             }
             return uniqueInstance;
         }
